@@ -1,0 +1,469 @@
+/* ── APDS Editor Host Styles ── Phase 8 ──────────────────────────────────── */
+
+/* ── Scroll container ───────────────────────────────────────────────────────── */
+.apds-outer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: #1e1e1e;
+  cursor: text;
+  scrollbar-width: thin;
+  scrollbar-color: #424242 #1e1e1e;
+}
+.apds-outer::-webkit-scrollbar      { width: 10px; height: 10px; }
+.apds-outer::-webkit-scrollbar-track { background: #1e1e1e; }
+.apds-outer::-webkit-scrollbar-thumb { background: #424242; border-radius: 4px; }
+.apds-outer::-webkit-scrollbar-thumb:hover { background: #555; }
+.apds-outer::-webkit-scrollbar-corner { background: #1e1e1e; }
+
+/* ── Sizer div ─────────────────────────────────────────────────────────────── */
+.apds-sizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  min-width: 1px;
+  min-height: 1px;
+}
+
+/* ── Canvas ────────────────────────────────────────────────────────────────── */
+.apds-canvas {
+  position: sticky;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+/* ── Hidden focus textarea ─────────────────────────────────────────────────── */
+.apds-focus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  white-space: pre;
+  caret-color: transparent;
+  color: transparent;
+  background: transparent;
+  font-size: 1px;
+  z-index: 50;
+}
+
+/* ── Autocomplete layer ─────────────────────────────────────────────────────── */
+.apds-ac-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ── Autocomplete popup (Phase 8/H improved) ─────────────────────────────────── */
+.apds-ac-popup {
+  position: absolute;
+  pointer-events: all;
+  background: #1f2428;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0,0,0,0.4);
+  min-width: 240px;
+  max-width: 400px;
+  overflow: hidden;
+  z-index: 200;
+  animation: apds-popup-in 0.07s ease-out;
+}
+
+@keyframes apds-popup-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.apds-ac-popup ul {
+  list-style: none;
+  margin: 0;
+  padding: 3px 0;
+}
+
+/* ── AC item ─────────────────────────────────────────────────────────────────── */
+.apds-ac-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 10px 3px 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  color: #cccccc;
+  height: 22px;
+  border-left: 2px solid transparent;
+  transition: background 0.06s;
+}
+
+.apds-ac-item:hover {
+  background: #2a2d2e;
+}
+
+.apds-ac-item.active {
+  background: linear-gradient(90deg, rgba(0,122,204,0.22) 0%, rgba(0,122,204,0.08) 100%);
+  border-left-color: #007acc;
+  color: #ffffff;
+}
+
+/* ── AC badge ────────────────────────────────────────────────────────────────── */
+.apds-ac-badge {
+  flex-shrink: 0;
+  width: 18px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  text-transform: lowercase;
+}
+
+.apds-ac-item.active .apds-ac-badge {
+  background: rgba(0,122,204,0.3);
+}
+
+/* ── AC label ────────────────────────────────────────────────────────────────── */
+.apds-ac-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Phase 8/H1: prefix highlight */
+.apds-ac-label-match {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.apds-ac-item.active .apds-ac-label-match {
+  color: #79c0ff;
+}
+
+/* ── AC detail ────────────────────────────────────────────────────────────────── */
+.apds-ac-detail {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #6e7681;
+  margin-left: 6px;
+  font-style: italic;
+}
+
+.apds-ac-item.active .apds-ac-detail {
+  color: #8b9aab;
+}
+
+/* ── AC scroll hint ──────────────────────────────────────────────────────────── */
+.apds-ac-scroll-hint {
+  padding: 2px 10px;
+  font-size: 11px;
+  color: #6e7681;
+  text-align: right;
+  border-top: 1px solid #2d2d2d;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── AC doc panel (Phase 8/H5) ───────────────────────────────────────────────── */
+.apds-ac-doc-panel {
+  display: none;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: #9da5b4;
+  border-top: 1px solid #2d2d2d;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+/* ── Find/Replace layer ──────────────────────────────────────────────────────── */
+.apds-find-layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 150;
+}
+
+/* ── Find/Replace widget ─────────────────────────────────────────────────────── */
+.apds-find-widget {
+  position: absolute;
+  top: 4px;
+  right: 16px;
+  background: #252526;
+  border: 1px solid #454545;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  padding: 5px;
+  z-index: 300;
+  pointer-events: all;
+  animation: apds-popup-in 0.07s ease-out;
+  min-width: 320px;
+  max-width: 460px;
+}
+
+.apds-find-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.apds-replace-row {
+  margin-top: 4px;
+}
+
+.apds-find-input {
+  flex: 1;
+  height: 24px;
+  padding: 0 7px;
+  background: #3c3c3c;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #cccccc;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  outline: none;
+  min-width: 0;
+}
+
+.apds-find-input:focus {
+  border-color: #007acc;
+  background: #2d2d2d;
+}
+
+.apds-find-input::placeholder {
+  color: #6e7681;
+}
+
+.apds-find-count {
+  font-size: 11px;
+  color: #858585;
+  white-space: nowrap;
+  min-width: 60px;
+  text-align: right;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.apds-find-count.no-results {
+  color: #f14c4c;
+}
+
+/* ── Find toolbar buttons ──────────────────────────────────────────────────── */
+.apds-find-btn,
+.apds-find-opt-btn {
+  height: 24px;
+  padding: 0 7px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #cccccc;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.apds-find-btn:hover,
+.apds-find-opt-btn:hover {
+  background: #3c3c3c;
+  border-color: #555;
+}
+
+.apds-find-opt-btn.active {
+  background: rgba(0,122,204,0.25);
+  border-color: #007acc;
+  color: #79c0ff;
+}
+
+.apds-find-close {
+  color: #858585;
+  font-size: 14px;
+  padding: 0 5px;
+}
+
+.apds-find-close:hover {
+  color: #ffffff;
+}
+
+.apds-find-replace-btn {
+  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 0 9px;
+  background: #3c3c3c;
+  border-color: #555;
+}
+
+.apds-find-replace-btn:hover {
+  background: #4a4a4a;
+  border-color: #666;
+}
+
+/* ── Go To Line overlay (Phase 9) ───────────────────────────────────────────── */
+.apds-gotoline-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 60px;
+  background: rgba(0, 0, 0, 0.35);
+  animation: apds-popup-in 0.07s ease-out;
+}
+
+.apds-gotoline-box {
+  background: #252526;
+  border: 1px solid #454545;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 240px;
+}
+
+.apds-gotoline-label {
+  font-size: 12px;
+  color: #858585;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.apds-gotoline-input {
+  height: 26px;
+  padding: 0 8px;
+  background: #3c3c3c;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #cccccc;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 14px;
+  outline: none;
+}
+
+.apds-gotoline-input:focus {
+  border-color: #007acc;
+}
+
+.apds-gotoline-input.invalid {
+  border-color: #f55050;
+  background: rgba(245, 80, 80, 0.1);
+}
+
+/* ── Minimap canvas (Phase 9) ────────────────────────────────────────────────── */
+/*
+ * Position: absolute within #editor-mount (which has position:relative).
+ * This is the ONLY safe way to add the minimap without breaking the
+ * position:sticky behaviour of the main .apds-canvas.
+ *
+ * The minimap is a right-side overlay. It does not affect the scroll
+ * container's width or height calculations.
+ */
+.apds-minimap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: opacity 0.15s;
+  z-index: 48; /* below find-layer(150), AC popup(200), GoToLine(400) */
+}
+
+.apds-minimap:hover {
+  opacity: 1;
+}
+
+
+/* ── Performance Diagnostics Overlay (Phase 9 / P9-E) ────────────────────── */
+/*
+ * Toggled by Ctrl+Shift+P. Hidden by default (display:none).
+ * Mounted on the editor-mount's parent (same level as the minimap).
+ * z-index 500 — above GoToLine (400) and Find (150).
+ */
+.apds-diag-overlay {
+  position: absolute;
+  bottom: 32px;
+  left: 16px;
+  background: rgba(14, 14, 14, 0.92);
+  border: 1px solid #3c3c3c;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  z-index: 500;
+  pointer-events: none;
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 11px;
+  color: #9da5b4;
+  min-width: 200px;
+  line-height: 1.7;
+}
+
+.apds-diag-title {
+  font-size: 10px;
+  font-weight: bold;
+  color: #569cd6;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #2d2d2d;
+  padding-bottom: 3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.apds-diag-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.apds-diag-key {
+  color: #6e7681;
+}
+
+.apds-diag-val {
+  color: #d4d4d4;
+  font-weight: 600;
+  text-align: right;
+}
+
+.apds-diag-hint {
+  margin-top: 5px;
+  font-size: 10px;
+  color: #4d4d4d;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+/* ── Light theme overrides ──────────────────────────────────────────────────── */
+.apds-outer.light {
+  background: #ffffff;
+  scrollbar-color: #c0c0c0 #ffffff;
+}
+.apds-outer.light::-webkit-scrollbar-track { background: #ffffff; }
+.apds-outer.light::-webkit-scrollbar-thumb { background: #c0c0c0; }
